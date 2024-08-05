@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import base64, re
 from time import sleep
 from requests.exceptions import RequestException
-
+import binascii
 
 def timestamp():
     return round(datetime.now().timestamp())
@@ -190,19 +190,29 @@ class Bot(Api):
         else:
             code = str(data_config.get("dailyCipher", {}).get("cipher"))
 
-            for index, char in enumerate(code):
+            for index, char in  reversed(list(enumerate(code))):
                 if char.isdigit():
                     new_code = code[:index] + code[index + 1 :]
-                    decode_string = base64.b64decode(new_code).decode("utf-8")
                     print(f"Xóa ký tự tại index {index}: {new_code}")
-                    print(f"Chuỗi Decode: {decode_string}")
+                    try:
+                        decode_string = base64.b64decode(new_code).decode("utf-8")
 
-                    if decode_string and bool(
-                        re.fullmatch(r"[A-Za-z]+", decode_string)
-                    ):
-                        self.claim_cipher_req(decode_string)
-                        print(f"Cipher: Code {code} - {decode_string} nhập thành công")
-                        break
+                        print(f"Chuỗi Decode: {decode_string}")
+
+                        if decode_string and bool(
+                            re.fullmatch(r"[A-Za-z]+", decode_string)
+                        ):
+                            self.claim_cipher_req(decode_string)
+                            print(f"Cipher: Code {code} - {decode_string} nhập thành công")
+                            break
+                    except binascii.Error as e:
+                        print(f"Lỗi dữ liệu base64: {e}")
+                    except UnicodeDecodeError as e:
+                        print(f"Lỗi giải mã UTF-8: {e}")
+                    except Exception as e:
+                        print(f"Lỗi không xác định: {e}")
+
+                    
 
 
         print('='*(50*2+len('Daily Quest')))
