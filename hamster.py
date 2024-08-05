@@ -1,4 +1,4 @@
-from bot import (
+from hams_module import (
     Bot,
     get_token,
     datetime,
