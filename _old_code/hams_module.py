@@ -238,3 +238,32 @@ class Bot(Api):
 
         return cd_seconds, max_taps
 
+
+
+BEAR_TOKEN = '1720953039665RVaqC0T8UZQRVVKMsWOELwc0YQhZO9rjFMsHGTJ8ajc2pPEYursguV7xFkAl2RLX942151353'
+code = 'FHDH'
+json_data = {"cipher": f"{code.strip().upper()}"}
+URL = "https://api.hamsterkombatgame.io/clicker"
+
+header = {
+            "accept": "application/json",
+            "accept-language": "en-US,en;q=0.9",
+            "authorization": f"Bearer {BEAR_TOKEN}",
+            "content-type": "application/json",
+            "origin": "https://hamsterkombatgame.io",
+            "priority": "u=1, i",
+            "referer": "https://hamsterkombatgame.io/",
+            "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-site",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+        }
+response = requests.post(
+    url= f'{URL}/claim-daily-cipher',headers=header,json=json_data
+)
+
+print(response)
+print(response.text)
