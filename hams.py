@@ -6,7 +6,6 @@ from time import sleep
 
 def get_username():
     json_data = fetch_json(ACCOUNT_INFO, AUTH_URL)
-
     if json_data:
         print(f' Account Name: {json_data.get('accountInfo',{}).get('name')}')
     else:
@@ -28,8 +27,15 @@ def claim_quests():
             "taskId": "streak_days",
         })
 
-        if result_streak:
-            print(' Điểm danh: <DONE>')
+        for i in range(10):
+            try:
+               if not str(result_streak.status_code).startswith('5'):
+                    print(' Điểm danh: <DONE>')
+                    break
+            except:
+               print('streark lỗi 500')
+
+            sleep(1)
 
     # Hamster Youtube
     hams_list = [
@@ -99,6 +105,7 @@ def wait_time(secs):
     print(f'Now: [{get_curr()}] - Next Click: [{add_secs_to_curr(secs)}]')
     sleep(secs)
 
+
 def process_tap_and_boost():
     tap()
 
@@ -114,18 +121,16 @@ def process_tap_and_boost():
         print(f'Boost đang hồi trong: {cd_boost} giây')
         wait_time(cd_boost)
     else:
-        print('Boost đã sử dụng hết trong hôm nay. Hãy chờ đến ngày mai.')
-        wait_time(20*60)
-
+        print(f'Boost hôm nay đã hết: {cd_boost} giây')
+        wait_time(30*60)
+        
     print()
 
-def run():
-    
 
+def run():
     while True:
         get_username()
         claim_quests()
-
 
         now = get_curr()
         end_time = now.replace(hour=7, minute=0, second=0, microsecond=0)
@@ -140,6 +145,6 @@ def run():
 
         print("!! Restart script...")
 
+
 if __name__ == "__main__":
     run()
-   
